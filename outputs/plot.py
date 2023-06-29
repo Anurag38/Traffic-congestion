@@ -25,8 +25,6 @@ sns.set(
     },
 )
 colors = sns.color_palette("colorblind", 4)
-# colors = sns.color_palette("Set1", 2)
-# colors = ['#FF4500','#e31a1c','#329932', 'b', 'b', '#6a3d9a','#fb9a99']
 dashes_styles = cycle(["-", "-.", "--", ":"])
 sns.set_palette(colors)
 colors = cycle(colors)

@@ -17,12 +17,12 @@ from sumo_rl import SumoEnvironment
 
 if __name__ == "__main__":
     env = SumoEnvironment(
-        net_file="nets/2way-single-intersection/single-intersection.net.xml",
-        route_file="nets/2way-single-intersection/single-intersection-vhvh.rou.xml",
-        out_csv_name="outputs/2way-single-intersection/dqn",
+        net_file="nets/single-intersection/single-intersection.net.xml",
+        route_file="nets/single-intersection/single-intersection.rou.xml",
+        out_csv_name="outputs/single-intersection/dqn",
         single_agent=True,
         use_gui=True,
-        num_seconds=5000,
+        num_seconds=20000,
     )
 
     model = DQN(
@@ -36,4 +36,7 @@ if __name__ == "__main__":
         exploration_final_eps=0.01,
         verbose=1,
     )
-    model.learn(total_timesteps=5000)
+    model.learn(total_timesteps=20000)
+
+
+

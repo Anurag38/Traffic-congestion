@@ -26,7 +26,8 @@ if __name__ == "__main__":
     env = SumoEnvironment(
         net_file="nets/4x4-Lucas/4x4.net.xml",
         route_file="nets/4x4-Lucas/4x4c1c2c1c2.rou.xml",
-        use_gui=False,
+        use_gui=True,
+        # use_gui=args.gui
         num_seconds=80000,
         min_green=5,
         delta_time=5,
