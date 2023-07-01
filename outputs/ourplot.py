@@ -318,9 +318,9 @@
 
 # Only generating the BAR plots for each csv in a folder
 import os
+import sys
 import pandas as pd
 import matplotlib.pyplot as plt
-import sys
 
 # Get the path of the current script
 current_path = os.path.dirname(os.path.abspath(__file__))
@@ -336,30 +336,65 @@ if not os.path.isdir(csv_folder):
 # Get a list of CSV files in the folder
 csv_files = [file for file in os.listdir(csv_folder) if file.endswith('.csv')]
 
+# Create a list to store the data frames
+dfs = []
+
 # Process each CSV file
 for csv_file in csv_files:
     # Read the CSV file
     df = pd.read_csv(os.path.join(csv_folder, csv_file))
+    dfs.append(df)
 
-    # Get the filename without extension
-    filename = os.path.splitext(csv_file)[0]
+# Create the violin plots in a single subplot
+fig, ax = plt.subplots()
 
-    # Create the bar plot
-    plt.figure()
-    plt.bar(df['step'], df['system_total_waiting_time'])
-    plt.xlabel('Step')
-    plt.ylabel('Total Waiting Time')
-    plt.title('Total Waiting Time per Step')
+# Generate the violin plots for each data frame
+violin_parts = ax.violinplot([df['system_total_waiting_time'] for df in dfs], showmedians=True)
 
-    # Save the bar plot in the same folder as the CSV file
-    output_path = os.path.join(csv_folder, f'{filename}.png')
-    plt.savefig(output_path)
+# Set the x-axis tick labels
+ax.set_xticks(range(1, len(csv_files) + 1))
+ax.set_xticklabels([os.path.splitext(file)[0] for file in csv_files], rotation=45)
 
-    # Close the plot
-    plt.close()
+# Set the labels and title
+ax.set_xlabel('CSV File')
+ax.set_ylabel('Total Waiting Time')
+ax.set_title('Total Waiting Time Distribution Comparison')
 
-    print(f"Bar plot saved as: {output_path}")
+# Customize the violin plot appearance if needed
+# Example: Change the color of the violins
+for vp in violin_parts['bodies']:
+    vp.set_facecolor('skyblue')
+    vp.set_edgecolor('gray')
+    vp.set_alpha(0.7)
 
+# Save the violin plot
+output_violinplot_path = os.path.join(csv_folder, 'violinplot.png')
+plt.savefig(output_violinplot_path)
 
+# Close the plot
+plt.close()
 
+print(f"Violin plot saved as: {output_violinplot_path}")
+
+# Create a line plot for mean system_total_waiting_time
+mean_waiting_times = [df['system_total_waiting_time'].mean() for df in dfs]
+plt.plot(range(1, len(csv_files) + 1), mean_waiting_times, marker='o', color='red', label='Mean Waiting Time')
+
+# Set the x-axis label for the line plot
+plt.xlabel('CSV File')
+
+# Set the y-axis label for the line plot
+plt.ylabel('Mean Waiting Time')
+
+# Add a legend for the line plot
+plt.legend()
+
+# Save the line plot
+output_lineplot_path = os.path.join(csv_folder, 'lineplot.png')
+plt.savefig(output_lineplot_path)
+
+# Close the plot
+plt.close()
+
+print(f"Line plot saved as: {output_lineplot_path}")
 

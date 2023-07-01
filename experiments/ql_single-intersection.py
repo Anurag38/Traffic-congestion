@@ -57,6 +57,7 @@ if __name__ == "__main__":
 
     for run in range(1, args.runs + 1):
         initial_states = env.reset()
+        print(initial_states)
         ql_agents = {
             ts: QLAgent(
                 starting_state=env.encode(initial_states[ts], ts),
@@ -73,6 +74,7 @@ if __name__ == "__main__":
 
         done = {"__all__": False}
         infos = []
+        print(ql_agents)
         if args.fixed:
             while not done["__all__"]:
                 _, _, done, _ = env.step({})
@@ -81,8 +83,9 @@ if __name__ == "__main__":
                 actions = {ts: ql_agents[ts].act() for ts in ql_agents.keys()}
 
                 s, r, done, _ = env.step(action=actions)
-
                 for agent_id in ql_agents.keys():
+                    #print()
+                    #print(agent_id)
                     ql_agents[agent_id].learn(next_state=env.encode(s[agent_id], agent_id), reward=r[agent_id])
-        env.save_csv(out_csv, run)
+        #.save_csv(out_csv, run)
         env.close()
